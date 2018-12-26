@@ -9,11 +9,16 @@ WordClock::WordClock()
 WordClock::WordList WordClock::getTimeInWords(uint8_t hours, uint8_t minutes)
 {
   auto timeInWords = update( hours, minutes );
-  for( int index : timeInWords )
-  {
-    qDebug() << clockWords.at(index).c_str();
-  }
+//  for( int index : timeInWords )
+//  {
+//    qDebug() << clockWords.at(index).c_str();
+//  }
   return timeInWords;
+}
+
+const WordClock::ClockWords& WordClock::getClockWords()
+{
+  return clockWords;
 }
 
 void WordClock::constructEnglish()

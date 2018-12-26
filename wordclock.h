@@ -13,7 +13,7 @@ public:
   typedef std::vector<std::string> ClockWords;
   WordClock();
   WordList getTimeInWords(uint8_t hours, uint8_t minutes);
-  ClockWords getClockWords();
+  const ClockWords& getClockWords();
 private:  
   ClockWords clockWords;
   void constructEnglish();
