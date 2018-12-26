@@ -1,26 +1,19 @@
 #include "wordclock.h"
-
 #include <QDebug>
 
 WordClock::WordClock()
 {
   constructGerman();
-  updateWords();
 }
 
-void WordClock::updateWords()
+WordClock::WordList WordClock::getTimeInWords(uint8_t hours, uint8_t minutes)
 {
-  auto theTime {QTime::currentTime()};
-  auto minutes {theTime.minute()};
-  auto hours {theTime.hour()};
-  qDebug() << "Time:" << theTime.toString();
-  qDebug() << hours << ":" << minutes;
-
   auto timeInWords = update( hours, minutes );
   for( int index : timeInWords )
   {
     qDebug() << clockWords.at(index).c_str();
   }
+  return timeInWords;
 }
 
 void WordClock::constructEnglish()
@@ -162,7 +155,7 @@ void WordClock::constructGerman()
   };
   auto getHourWords = [](uint8_t hours, uint8_t minutes){
     uint8_t theHour = hours;
-    if(25 >= minutes)
+    if(25 <= minutes)
     {
       theHour += 1;
     }

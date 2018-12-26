@@ -9,11 +9,13 @@
 class WordClock
 {
 public:
-  WordClock();
-private:
   typedef std::list<int> WordList;
-  std::vector<std::string> clockWords;
-  void updateWords();
+  typedef std::vector<std::string> ClockWords;
+  WordClock();
+  WordList getTimeInWords(uint8_t hours, uint8_t minutes);
+  ClockWords getClockWords();
+private:  
+  ClockWords clockWords;
   void constructEnglish();
   void constructGerman();
   std::function< WordList(uint8_t, uint8_t)> update;
