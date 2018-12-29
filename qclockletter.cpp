@@ -43,3 +43,15 @@ int QClockLetter::wordIndex() const
 {
   return m_wordIndex;
 }
+
+bool QClockLetter::isActive() const
+{
+  return m_active;
+}
+
+void QClockLetter::setActive(bool isActive)
+{
+  bool changed = (m_active != isActive);
+  m_active = isActive;
+  if( changed ) emit activeChanged();
+}

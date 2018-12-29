@@ -41,7 +41,6 @@ private:
   WordClock::WordList lastTimeInWords;
   QTimer itsTimer;
   QVector<QString> m_clockWords;
-  QVector<int> m_wordRowMap;
   QVector<int> m_timeInWords;
   uint8_t m_clockSize;
   TClock m_clockLayout;
@@ -51,6 +50,7 @@ private:
   static QClockLetter* clockLayoutAt(QQmlListProperty<QClockLetter>* list, int index);
 
   void calculateClockLayout();
+  void updateClockTime();
 };
 
 #endif // QWORDCLOCK_H

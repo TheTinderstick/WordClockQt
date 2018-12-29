@@ -9,7 +9,6 @@ const QString QWordClock::randomChars{"ABCDEFGHIJKLMNOPRSTUW"};
 QWordClock::QWordClock(QObject *parent) : QObject(parent), itsTimer(this)
 {
   QObject::connect( &itsTimer, SIGNAL(timeout()), this, SLOT(timerInterval()) );
-  itsTimer.start(1000);
 
   /* for now in ctor => move to language change */
   m_clockWords.clear();
@@ -19,12 +18,14 @@ QWordClock::QWordClock(QObject *parent) : QObject(parent), itsTimer(this)
     QString aWord{ word.c_str() };
     m_clockWords.append( aWord.toLatin1().toUpper() );
   }
-//  for( auto word : m_clockWords )
-//  {
-//    qDebug() << word;
-//  }
 
   calculateClockLayout();
+
+  /* run timerInterval once to initiakize time */
+  timerInterval();
+
+  /* now start cyclic timer */
+  itsTimer.start(1000);
 }
 
 QVector<QString> QWordClock::clockWords()
@@ -69,6 +70,29 @@ void QWordClock::timerInterval()
     }
     emit timeInWordsChanged();
   }
+  updateClockTime();
+}
+
+void QWordClock::updateClockTime()
+{
+  for( auto& row : m_clockLayout )
+  {
+    for( auto c : row )
+    {
+      auto wordIndex = c->wordIndex();
+      auto iterator = std::find_if(m_timeInWords.begin(),
+                                   m_timeInWords.end(),
+                                   [wordIndex](int item){ return item==wordIndex;});
+      if( iterator != m_timeInWords.end() )
+      {
+        c->setActive(true);
+      }
+      else
+      {
+        c->setActive(false);
+      }
+    }
+  }
 }
 
 void QWordClock::calculateClockLayout()
@@ -89,7 +113,6 @@ void QWordClock::calculateClockLayout()
     int currentRow = 0;
     int processed = 0;
     QVector<int> remainingInRow(size, size);
-    QVector<int> wordRowMap(clockWordCount());
     TClockRow aClockRow;
     TClock aClock(size, aClockRow);
     for( int i=0; i<clockWordCount(); ++i )
@@ -98,7 +121,6 @@ void QWordClock::calculateClockLayout()
       if( word.length() <= remainingInRow.at(currentRow) )
       {
         /* word fits in current row => add it */
-        wordRowMap[i] = currentRow;
         remainingInRow[currentRow] -= word.length();
         bool firstChar=true;
         for( auto c : word )
@@ -128,7 +150,6 @@ void QWordClock::calculateClockLayout()
         else
         {
           /* add the word to the next row */
-          wordRowMap[i] = currentRow;
           remainingInRow[currentRow] -= word.length();
           bool firstChar=true;
           for( auto c : word )
@@ -147,8 +168,6 @@ void QWordClock::calculateClockLayout()
     }
     if( processed == clockWordCount() )
     {
-      m_wordRowMap.clear();
-      m_wordRowMap = wordRowMap;
       m_clockSize = size;
       theClock = aClock;
       break;
@@ -190,6 +209,7 @@ void QWordClock::calculateClockLayout()
     }
     std::cout << std::endl;
   }
+  m_clockLayout.clear();
   m_clockLayout = theClock;
   emit clockLayoutChanged();
 }
