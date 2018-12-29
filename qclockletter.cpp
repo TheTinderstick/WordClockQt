@@ -33,3 +33,13 @@ bool QClockLetter::isWordStart()
 {
   return m_wordStart;
 }
+
+const QChar& QClockLetter::clockChar() const
+{
+  return m_clockChar;
+}
+
+int QClockLetter::wordIndex() const
+{
+  return m_wordIndex;
+}

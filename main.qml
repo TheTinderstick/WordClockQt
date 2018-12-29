@@ -2,6 +2,7 @@ import QtQuick 2.8
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.12
 import QWordClock 1.0
+import QClockLetter 1.0
 
 Window {
   id: mainWindow
@@ -19,19 +20,19 @@ Window {
     anchors.fill: parent
     columns: wordClock.clockSize()
     Repeater {
-      model: wordClock.clockSize()
-      Repeater {
-        model: wordClock.clockSize()
-        Rectangle {
-          width: mainWindow.width / theGrid.columns
-          height: mainWindow.height / theGrid.columns
-          border.width: 2
-          border.color: "red"
-          Text {
-            text: "X"
-            color: "black"
-            fontSizeMode: Text.Fit
-          }
+      model: wordClock.clockSize()*wordClock.clockSize()
+      Rectangle {
+        width: mainWindow.width / theGrid.columns
+        height: mainWindow.height / theGrid.columns
+        border.width: 2
+        border.color: "red"
+        Text {
+          anchors.fill: parent
+          text: wordClock.clockLayout[index].clockChar
+          color: "black"
+          fontSizeMode: Text.Fit
+          horizontalAlignment: Text.AlignHCenter
+          verticalAlignment: Text.AlignVCenter
         }
       }
     }

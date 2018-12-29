@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 
   QQmlApplicationEngine engine;
 
+  qmlRegisterType<QClockLetter>("QClockLetter", 1, 0, "ClockLetter");
   qmlRegisterType<QWordClock>("QWordClock", 1, 0, "WordClock");
 
   engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

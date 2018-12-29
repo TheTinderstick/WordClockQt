@@ -6,6 +6,8 @@
 class QClockLetter : public QObject
 {
   Q_OBJECT
+  Q_PROPERTY(QChar clockChar READ clockChar CONSTANT)
+  Q_PROPERTY(int wordIndex READ wordIndex CONSTANT)
 public:
   explicit QClockLetter(QObject *parent = nullptr);
   explicit QClockLetter(QChar aChar, QObject *parent = nullptr);
@@ -14,9 +16,14 @@ public:
   void setWordStart(bool isWordStart);
   bool isWordStart();
 
+  const QChar& clockChar() const;
+  int wordIndex() const;
+
+private:
   QChar m_clockChar;
   bool m_wordStart;
   uint8_t m_wordIndex;
+
 signals:
 
 public slots:

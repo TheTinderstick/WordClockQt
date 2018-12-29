@@ -42,9 +42,11 @@ const QString& QWordClock::clockWordAt(int index) const
   return m_clockWords.at(index);
 }
 
-const QWordClock::TClock& QWordClock::clockLayout() const
+QQmlListProperty<QClockLetter> QWordClock::clockLayout()
 {
-  return m_clockLayout;
+  return QQmlListProperty<QClockLetter>(this, this,
+                                        &QWordClock::clockLayoutCount,
+                                        &QWordClock::clockLayoutAt);
 }
 
 int QWordClock::clockSize() const
@@ -78,7 +80,6 @@ void QWordClock::calculateClockLayout()
   }
   double sqrtOfSize = sqrt( static_cast<double>(sumWordLength) );
   int minSquare = ceil(sqrtOfSize);
-  qDebug() << "min square:" << minSquare;
 
   TClock theClock;
 
@@ -185,10 +186,29 @@ void QWordClock::calculateClockLayout()
 
   for( auto row : theClock ) {
     for( auto c : row ) {
-      std::cout << c->m_clockChar.toLatin1();
+      std::cout << c->clockChar().toLatin1();
     }
     std::cout << std::endl;
   }
   m_clockLayout = theClock;
   emit clockLayoutChanged();
+}
+
+int QWordClock::clockLayoutCount(QQmlListProperty<QClockLetter>* list)
+{
+  auto size = reinterpret_cast< QWordClock* >(list->data)->clockSize();
+  return size*size;
+}
+
+QClockLetter* QWordClock::clockLayoutAt(QQmlListProperty<QClockLetter>* list, int index)
+{
+  auto *wordClock = reinterpret_cast< QWordClock* >(list->data);
+  auto row = index / wordClock->clockSize();
+  auto col = index - (row*wordClock->clockSize());
+  return wordClock->clockLayoutAt(row, col);
+}
+
+QClockLetter* QWordClock::clockLayoutAt(int row, int col)
+{
+  return m_clockLayout.at(row).at(col);
 }

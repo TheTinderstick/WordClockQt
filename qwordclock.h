@@ -7,13 +7,14 @@
 #include <QTimer>
 #include <QVector>
 #include <QString>
+#include <QQmlListProperty>
 
 class QWordClock : public QObject
 {
   Q_OBJECT
   Q_PROPERTY(QVector<QString> clockWords READ clockWords NOTIFY clockWordsChanged)
   Q_PROPERTY(QVector<int> timeInWords NOTIFY timeInWordsChanged)
-  Q_PROPERTY(TClock clockLayout READ clockLayout NOTIFY clockLayoutChanged)
+  Q_PROPERTY(QQmlListProperty<QClockLetter> clockLayout READ clockLayout NOTIFY clockLayoutChanged)
 
 public:
   typedef QVector< QClockLetter* > TClockRow;
@@ -24,7 +25,8 @@ public:
   Q_INVOKABLE int clockWordCount() const;
   const QString& clockWordAt(int index) const;
   Q_INVOKABLE int clockSize() const;
-  const TClock& clockLayout() const;
+  QQmlListProperty<QClockLetter> clockLayout();
+  QClockLetter* clockLayoutAt(int row, int col);
 
 signals:
   void clockWordsChanged();
@@ -45,6 +47,8 @@ private:
   TClock m_clockLayout;
 
   static const QString randomChars;
+  static int clockLayoutCount(QQmlListProperty<QClockLetter>* list);
+  static QClockLetter* clockLayoutAt(QQmlListProperty<QClockLetter>* list, int index);
 
   void calculateClockLayout();
 };
