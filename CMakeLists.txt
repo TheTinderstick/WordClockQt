@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
     "main.cpp"
     "wordclock.cpp"
     "qwordclock.cpp"
+    "qclockletter.cpp"
     "qml.qrc")
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Quick)
